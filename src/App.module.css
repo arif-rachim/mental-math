@@ -1,0 +1,61 @@
+.button{
+    padding: 10px;
+    border: 1px solid rgba(60,60,60,0.3);
+    textAlign: center;
+    border-radius: 5px;
+    cursor : pointer;
+    background: rgba(60,60,60,0.6);
+    color: #FAFAFA;
+    font-size: 1.5rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.buttonNavigator{
+    padding: 10px;
+    border: none;
+    border-radius: 0px;
+    textAlign: center;
+    cursor : pointer;
+    background: none;
+    color: #FAFAFA;
+    font-size: 2rem;
+    transition: all 0.3s ease-in-out;
+}
+.buttonNavigator:focus{
+    outline: none;
+}
+
+.button:hover{
+    background: rgba(255,255,255,0.01);
+}
+
+.main{
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}
+
+
+.input {
+    padding : 10px;
+    font-size: 2rem;
+    border : none;
+    background: none;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    color: #FAFAFA;
+    text-align: right;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.input:focus{
+    outline: none;
+    background: rgba(255,255,255,0.1);
+}
+
+.questionTitle{
+    font-size: 2rem;
+}
+.questionDescription{
+    font-size: 1rem;
+    color: rgba(255,255,255,0.4);
+}
