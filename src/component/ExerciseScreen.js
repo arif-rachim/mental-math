@@ -190,11 +190,9 @@ export function ExerciseSession({isTrial}) {
                 </Pie>
             </PieChart>
         </div>
-        <button onClick={() => document.getElementById('audio-one').play() }>Play Sounds v3</button><br/>
-        <button onClick={() => playSounds([1,2,3,4,5])}>Play Sounds v4</button><br/>
         <button onClick={() => {
-            playSounds([1,2,3,4,5]);
-        }}>Play Sounds v5</button><br/>
+            playSounds([1,2,3,4,5,6,7,8,9,-1,-2,-3,-4,-5,-6,-7,-8,-9]);
+        }}>Play Sounds v6</button><br/>
         {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning} numbers={questionSets[0]}/>}
         {sessionRunning && currentSum < totalSums && (
             <div style={{textAlign: 'center'}}>
