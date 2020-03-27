@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.83a228f5.chunk.css",
-    "main.js": "/static/js/main.1eed536a.chunk.js",
-    "main.js.map": "/static/js/main.1eed536a.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.5b7db786.js",
-    "runtime-main.js.map": "/static/js/runtime-main.5b7db786.js.map",
-    "static/js/2.13c32bd7.chunk.js": "/static/js/2.13c32bd7.chunk.js",
-    "static/js/2.13c32bd7.chunk.js.map": "/static/js/2.13c32bd7.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.8689e4a2fcae6c63d0ed57856c685899.js": "/precache-manifest.8689e4a2fcae6c63d0ed57856c685899.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.83a228f5.chunk.css.map": "/static/css/main.83a228f5.chunk.css.map",
-    "static/js/2.13c32bd7.chunk.js.LICENSE.txt": "/static/js/2.13c32bd7.chunk.js.LICENSE.txt"
+    "main.css": "/mental-math/static/css/main.83a228f5.chunk.css",
+    "main.js": "/mental-math/static/js/main.e9feadd0.chunk.js",
+    "main.js.map": "/mental-math/static/js/main.e9feadd0.chunk.js.map",
+    "runtime-main.js": "/mental-math/static/js/runtime-main.be99d159.js",
+    "runtime-main.js.map": "/mental-math/static/js/runtime-main.be99d159.js.map",
+    "static/js/2.13c32bd7.chunk.js": "/mental-math/static/js/2.13c32bd7.chunk.js",
+    "static/js/2.13c32bd7.chunk.js.map": "/mental-math/static/js/2.13c32bd7.chunk.js.map",
+    "index.html": "/mental-math/index.html",
+    "precache-manifest.de1dafd6aa9ac5a40eb23108d9cc2b85.js": "/mental-math/precache-manifest.de1dafd6aa9ac5a40eb23108d9cc2b85.js",
+    "service-worker.js": "/mental-math/service-worker.js",
+    "static/css/main.83a228f5.chunk.css.map": "/mental-math/static/css/main.83a228f5.chunk.css.map",
+    "static/js/2.13c32bd7.chunk.js.LICENSE.txt": "/mental-math/static/js/2.13c32bd7.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.5b7db786.js",
+    "static/js/runtime-main.be99d159.js",
     "static/js/2.13c32bd7.chunk.js",
     "static/css/main.83a228f5.chunk.css",
-    "static/js/main.1eed536a.chunk.js"
+    "static/js/main.e9feadd0.chunk.js"
   ]
 }
