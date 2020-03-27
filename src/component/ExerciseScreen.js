@@ -3,6 +3,7 @@ import styles from "../App.module.css";
 import {useSound} from "./SoundContext";
 import {useAppContext} from "../AppContext";
 import {Cell, Pie, PieChart} from "recharts";
+import moment from 'moment';
 
 function generateRandomNumber(result) {
     const total = result.reduce((ac, next) => ac + next, 0);
@@ -39,22 +40,29 @@ function handleSubmit({answer, setTimerRunning, setCurrentSum, setCurrentQuestio
     setAnswers((val) => [...val, {answer, time}]);
 }
 
-function ClickToStart({studentName, setSessionRunning,numbers}) {
+function ClickToStart({studentName, setSessionRunning, numbers}) {
     const {markSessionBegin} = useAppContext();
     const {playSounds} = useSound();
-    return <div style={{display:'inline-block',margin:'auto',marginTop:'2rem',padding:'1rem',background:'rgba(0,0,0,0.5)'}}>
+    return <div style={{
+        display: 'inline-block',
+        margin: 'auto',
+        marginTop: '2rem',
+        padding: '1rem',
+        background: 'rgba(0,0,0,0.5)'
+    }}>
         <h1 style={{textAlign: 'center', marginBottom: '5rem'}}>{studentName}</h1>
         <div style={{textAlign: 'center'}}>
             <button className={styles.button} onClick={() => {
                 markSessionBegin();
                 setSessionRunning(true);
                 playSounds(numbers);
-            }}>Click Here To Begin Session</button>
+            }}>Click Here To Begin Session
+            </button>
         </div>
     </div>;
 }
 
-function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnswers, isTrial,currentSum,questionSet}) {
+function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnswers, isTrial, currentSum, questionSet}) {
     const answerRef = useRef(null);
     const timeLogger = useRef(null);
     const {playSounds} = useSound();
@@ -69,7 +77,7 @@ function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnsw
                  onSubmit={(e) => {
                      e.preventDefault();
                      const answer = parseInt(e.target.elements.answer.value);
-                     if(answer >= 0){
+                     if (answer >= 0) {
                          handleSubmit({
                              answer,
                              setTimerRunning,
@@ -78,7 +86,7 @@ function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnsw
                              setAnswers,
                              timeLogger
                          });
-                         playSounds(questionSet[currentSum+1]);
+                         playSounds(questionSet[currentSum + 1]);
                      }
                  }}>
 
@@ -104,8 +112,8 @@ function QuestionPanel({questionSets, currentSum, currentQuestion}) {
         fontSize: '18rem',
         position: 'relative',
         margin: 'auto',
-        maxWidth : '18rem',
-        height : '18rem',
+        maxWidth: '18rem',
+        height: '18rem',
     }}>
         <div style={{
             background: 'rgba(0,0,0,0.5)',
@@ -113,7 +121,7 @@ function QuestionPanel({questionSets, currentSum, currentQuestion}) {
             borderRadius: '20rem', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'
         }}/>
         <div style={{
-            position : 'relative',
+            position: 'relative',
             top: '-4rem',
             width: '100%',
             textAlign: 'center'
@@ -121,10 +129,14 @@ function QuestionPanel({questionSets, currentSum, currentQuestion}) {
     </div>;
 }
 
-const colors = ['rgba(255,255,255,1)','rgba(255,255,255,0.5)'];
+const colors = ['rgba(255,255,255,1)', 'rgba(255,255,255,0.5)'];
+
+function padZero(val) {
+    return parseInt(val.toString()) <= 9 ? '0' + val : val;
+}
 
 export function ExerciseSession({isTrial}) {
-    const {config,saveSession,setPage} = useAppContext();
+    const {config, saveSession, setPage, sessionTimer} = useAppContext();
     const {studentName, totalSums, totalQuestions, pauseBetweenQuestionInMs} = config;
     const [questionSets] = useState(setupQuestions(totalQuestions, totalSums));
     const [timerRunning, setTimerRunning] = useState(false);
@@ -132,7 +144,8 @@ export function ExerciseSession({isTrial}) {
     const [currentSum, setCurrentSum] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(-1);
     const [answers, setAnswers] = useState([]);
-    const {playSounds} = useSound();
+
+
     useEffect(() => {
         let intervalId = null;
         if (sessionRunning) {
@@ -162,35 +175,57 @@ export function ExerciseSession({isTrial}) {
             setTimerRunning(false);
             setCurrentQuestion(-1);
             setCurrentSum(0);
-            if(!isTrial){
-                saveSession(questionSets,answers);
+            if (!isTrial) {
+                saveSession(questionSets, answers);
                 setPage(2);
             }
             setAnswers([]);
         }
-    }, [currentSum, totalSums, answers, questionSets,saveSession,setPage,isTrial]);
+    }, [currentSum, totalSums, answers, questionSets, saveSession, setPage, isTrial]);
     const isLastQuestionInTheSum = currentQuestion === totalQuestions;
     const currentTotalQuestions = (currentSum * totalQuestions) + (currentQuestion === -1 ? 0 : currentQuestion);
     const grandTotalQuestions = totalSums * totalQuestions;
     const percentage = Math.round((currentTotalQuestions / grandTotalQuestions) * 100);
     const data = [
-        {name:'complete',value:percentage},
-        {name:'incomplete',value: 100 - percentage}
+        {name: 'complete', value: percentage},
+        {name: 'incomplete', value: 100 - percentage}
     ];
-    return (<div style={{maxWidth: '100%',display:'flex',flexDirection:'column'}}>
+
+    const [currentClock, setCurrentClock] = useState('');
+
+    const startTime = sessionTimer.current;
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            if (startTime) {
+                const timeDate = new Date().getTime() - startTime;
+                const time = moment.duration(timeDate);
+                setCurrentClock(`${time.hours()}:${padZero(time.minutes())}:${padZero(time.seconds())}`);
+            }
+        }, 1000);
+        return () => {
+            clearInterval(intervalId);
+        }
+    }, [startTime]);
+
+    return (<div style={{maxWidth: '100%', display: 'flex', flexDirection: 'column'}}>
         <div style={{display: 'flex'}}>
             <div style={{flexGrow: '1'}}></div>
-            <PieChart width={100} height={100}>
-                <Pie animationDuration={100} data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={30} outerRadius={40} fill="#82ca9d" >
-                    {
-                        data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={colors[index]} stroke={'none'}/>
-                        ))
-                    }
-                </Pie>
-            </PieChart>
+            <div style={{position: 'relative',marginTop:'-1rem',marginRight:'-1rem'}}>
+                <PieChart width={100} height={100}>
+                    <Pie animationDuration={100} data={data} dataKey="value" nameKey="name" cx="50%" cy="50%"
+                         innerRadius={40} outerRadius={50} fill="#82ca9d">
+                        {
+                            data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={colors[index]} stroke={'none'}/>
+                            ))
+                        }
+                    </Pie>
+                </PieChart>
+                <div style={{position: 'absolute', top: 40, width: '100%', textAlign: 'center'}}>{currentClock}</div>
+            </div>
         </div>
-        {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning} numbers={questionSets[0]}/>}
+        {!sessionRunning &&
+        <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning} numbers={questionSets[0]}/>}
         {sessionRunning && currentSum < totalSums && (
             <div style={{textAlign: 'center'}}>
                 {timerRunning && <div>

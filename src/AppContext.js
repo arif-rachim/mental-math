@@ -70,7 +70,7 @@ export function AppContextProvider({children}){
         return new Date().getTime() - sessionTimer.current;
     }
 
-    return <AppContext.Provider value={{ setPage,setConfig,config,saveSettings,saveSession,getSession,markSessionBegin}}>
+    return <AppContext.Provider value={{ setPage,setConfig,config,saveSettings,saveSession,getSession,markSessionBegin,sessionTimer}}>
         {children(page)}
     </AppContext.Provider>
 }

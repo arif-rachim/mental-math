@@ -28,6 +28,9 @@ export function SoundContextProvider({children}) {
 
     function playSounds(numbers) {
         const delayInMiliseconds = 1000;
+        if(numbers === null || numbers === undefined || numbers.length === 0){
+            return;
+        }
         numbers.forEach((number, index) => {
             setTimeout(() => {
                 soundRef.current.currentTime = numberTimeline[number.toString()];
@@ -38,9 +41,9 @@ export function SoundContextProvider({children}) {
             soundRef.current.pause();
         },((numbers.length+1) * delayInMiliseconds));
     }
-
+    const iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
     return <SoundContext.Provider value={{playSounds}}>
-        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+        <div style={{display: 'flex', justifyContent: 'center',width:'100%',position:'absolute',textAlign:'center',paddingTop:'1rem',opacity : iOS ? 1 : 0}}>
             <audio ref={soundRef} controls preload="auto">
                 <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v2.mp3`} type="audio/mpeg"/>
             </audio>

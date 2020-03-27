@@ -39,16 +39,26 @@ export default function SetupScreen() {
             {currentConfigScreen === 0 &&
             <h1>Mental Math Exercise</h1>
             }
-            {currentConfigScreen === 1 && <Field
+            {currentConfigScreen === 1 &&
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                setCurrentConfigScreen((val) => val + 1);
+            }}>
+            <Field
                 label={"Student name ?"}
                 type={"text"}
                 value={studentName}
                 onValueChange={(val) => setConfig(state => ({...state, studentName: val}))}
                 description={"Your name will be recorded and your historical session will be kept in the device"}
             />
+            </form>
 
             }
             {currentConfigScreen === 2 &&
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                setCurrentConfigScreen((val) => val + 1);
+            }}>
             <Field
                 label={`Total sums in each session ?`}
                 type={"number"}
@@ -56,24 +66,33 @@ export default function SetupScreen() {
                 onValueChange={(val) => setConfig(state => ({...state, totalSums: parseInt(val)}))}
 
                 description={"For competition practice, total sums in a session usually `200`"}
-            />
+            /></form>
             }
             {currentConfigScreen === 3 &&
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                setCurrentConfigScreen((val) => val + 1);
+            }}>
             <Field
                 label={`Total questions in each sums ?`}
                 type={"number"}
                 value={totalQuestions}
                 onValueChange={(val) => setConfig(state => ({...state, totalQuestions: parseInt(val)}))}
                 description={"For competition practice, recommended total questions in a sum is `6`"}
-            />}
+            /></form>
+            }
             {currentConfigScreen === 4 &&
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                setCurrentConfigScreen((val) => val + 1);
+            }}>
             <Field
                 label={`Pause between question  ?`}
                 type={"number"}
                 value={pauseBetweenQuestionInMs}
                 onValueChange={(val) => setConfig(state => ({...state, pauseBetweenQuestionInMs: parseInt(val)}))}
                 description={"For competition practice, recommended pause is `1000` milliseconds (1 second)"}
-            />
+            /></form>
             }
             {currentConfigScreen === 5 && <ExerciseSession isTrial={true}/>}
         </div>
