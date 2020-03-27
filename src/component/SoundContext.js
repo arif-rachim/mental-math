@@ -10,12 +10,20 @@ export function SoundContextProvider({children}){
             soundRef.current[number.toString()].current.play();
         }
     }
-    return <SoundContext.Provider value={{playSound}}>
+    // testing for IOS
+    function playSounds(numbers){
+        numbers.forEach((number,index) => {
+            setTimeout(() => {
+                soundRef.current[number.toString()].current.play();
+            },index * 1000);
+        });
+    }
+    return <SoundContext.Provider value={{playSound,playSounds}}>
         <Sound soundRef={soundRef}/>
         {children}
     </SoundContext.Provider>
 }
 export function useSound(){
-    const {playSound} = useContext(SoundContext);
-    return {playSound};
+    const {playSound,playSounds} = useContext(SoundContext);
+    return {playSound,playSounds};
 }

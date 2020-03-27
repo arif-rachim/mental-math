@@ -1,11 +1,14 @@
 import React, {useRef} from "react";
 import {useAppContext} from "../AppContext";
 import { CartesianGrid, YAxis, ResponsiveContainer, BarChart, Bar} from 'recharts';
-
+import moment from 'moment';
 
 export default function SummaryScreen() {
     const {getSession} = useAppContext();
     const sessions = useRef(getSession());
+    if(!(sessions.current && sessions.current.length > 0)){
+        return <div style={{marginTop:'5rem'}}>No Report Yet</div>
+    }
     const lastSession = sessions.current[sessions.current.length - 1];
     const correctAnswers = lastSession.sums.reduce((acc, sum) => {
         const total = sum.questions.reduce((acc, num) => acc + num, 0);
@@ -16,9 +19,12 @@ export default function SummaryScreen() {
     const seconds = Math.round(duration/1000);
     const minute = Math.floor(seconds / 60);
     const leftSecond = seconds % 60;
-    return <div style={{fontSize: '1.5rem',width:'100%',padding:'1rem',background:'rgba(0,0,0,0.4)',boxShadow:'0px 30px 30px 0px rgba(0,0,0,0.5)'}}>
-        <div>You last session Score</div>
+    return <div style={{fontSize: '1.5rem',width:'100%',padding:'1rem',paddingTop:'3rem',background:'rgba(0,0,0,0.4)',boxShadow:'0px 30px 30px 0px rgba(0,0,0,0.5)'}}>
         <table style={{fontSize:'1rem'}}>
+            <tr>
+                <td>Date</td>
+                <td>{moment(new Date(lastSession.date)).format('DD MMM YYYY HH:mm:ss')}</td>
+            </tr>
             <tr>
                 <td>Total Sums</td>
                 <td>{lastSession.sums.length}</td>

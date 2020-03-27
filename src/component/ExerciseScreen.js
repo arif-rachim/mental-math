@@ -3,7 +3,7 @@ import styles from "../App.module.css";
 import {useSound} from "./SoundContext";
 import {useAppContext} from "../AppContext";
 import {Cell, Pie, PieChart} from "recharts";
-
+import Drawer from "@material-ui/core/Drawer";
 
 function generateRandomNumber(result) {
     const total = result.reduce((ac, next) => ac + next, 0);
@@ -91,9 +91,8 @@ function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnsw
             <button className={styles.button} type={'submit'}>Enter</button>
             }
         </div>
-        <input ref={answerRef} className={styles.input} style={{marginBottom: '2rem', fontSize: '8rem'}}
+        <input ref={answerRef} className={styles.input} type={'number'} style={{marginBottom: '2rem', fontSize: '8rem'}}
                name={"answer"}/>
-
     </form>;
 }
 
@@ -129,7 +128,7 @@ export function ExerciseSession({isTrial}) {
     const [sessionRunning, setSessionRunning] = useState(false);
     const [currentSum, setCurrentSum] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(-1);
-    const {playSound} = useSound();
+    const {playSound,playSounds} = useSound();
     const [answers, setAnswers] = useState([]);
 
     useEffect(() => {
@@ -199,6 +198,7 @@ export function ExerciseSession({isTrial}) {
                 </Pie>
             </PieChart>
         </div>
+        <button onClick={() => playSounds([3,5,2,3,5])}>Play Sounds</button>
         {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning}/>}
         {sessionRunning && currentSum < totalSums && (
             <div style={{textAlign: 'center'}}>
@@ -218,5 +218,7 @@ export function ExerciseSession({isTrial}) {
 }
 
 export default function ExerciseScreen() {
-    return <div style={{padding: '2rem', width: '100%'}}><ExerciseSession isTrial={false}/></div>;
+    return <div style={{padding: '2rem', width: '100%'}}>
+        <ExerciseSession isTrial={false}/>
+    </div>;
 }

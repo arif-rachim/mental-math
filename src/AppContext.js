@@ -4,12 +4,20 @@ const AppContext = createContext(null);
 
 
 export function AppContextProvider({children}){
-    const [config, setConfig] = useState({
+
+    const [config, setConfig] = useState(() => {
+        const config = localStorage.getItem('config');
+        if (config && config.length > 0) {
+            return JSON.parse(config);
+        }
+        return {
             studentName : 'RAOUL ARDY',
             totalSums : 200,
             totalQuestions : 6,
             pauseBetweenQuestionInMs : 1000
-        });
+        }
+    });
+
     const [page, setPage] = useState(0);
 
     function getSession(){
@@ -50,7 +58,7 @@ export function AppContextProvider({children}){
 
     function saveSettings() {
         localStorage.setItem('config', JSON.stringify(config));
-        setPage(1);
+        window.location.reload();
     }
 
     const sessionTimer = useRef();

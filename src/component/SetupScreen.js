@@ -10,9 +10,10 @@ export default function SetupScreen() {
     const [currentConfigScreen, setCurrentConfigScreen] = useState(0);
     const {setConfig, saveSettings} = useAppContext();
     return (<div style={{width:'100%'}}>
-
         <div style={{
             display: 'flex',
+            position:'fixed',
+            bottom : 0,
             width: '100vw',
             backgroundColor: 'rgba(0,0,0,0.3)'
         }}>
