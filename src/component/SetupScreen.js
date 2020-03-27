@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import Field from "./Field";
 import styles from "../App.module.css";
 import {useAppContext} from "../AppContext";
-import ExerciseScreen from "./ExerciseScreen";
+import {ExerciseSession} from "./ExerciseScreen";
 
 export default function SetupScreen() {
     const {config} = useAppContext();
@@ -74,7 +74,7 @@ export default function SetupScreen() {
                 description={"For competition practice, recommended pause is `1000` milliseconds (1 second)"}
             />
             }
-            {currentConfigScreen === 5 && <ExerciseScreen isTrial={true}/>}
+            {currentConfigScreen === 5 && <ExerciseSession isTrial={true}/>}
         </div>
     </div>)
 }

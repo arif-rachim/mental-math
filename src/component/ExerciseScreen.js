@@ -32,21 +32,19 @@ function setupQuestions(totalQuestions, totalSums) {
     return result;
 }
 
-function handleSubmit({event, setTimerRunning, setCurrentSum, setCurrentQuestion, setAnswers, timeLogger}) {
-    event.preventDefault();
+function handleSubmit({answer, setTimerRunning, setCurrentSum, setCurrentQuestion, setAnswers, timeLogger}) {
     setTimerRunning(false);
     setCurrentSum(val => val + 1);
     setCurrentQuestion(-1);
     const time = new Date().getTime() - timeLogger.current;
-    const answer = parseInt(event.target.elements.answer.value);
     setAnswers((val) => [...val, {answer, time}]);
 }
 
 function ClickToStart({studentName, setSessionRunning}) {
-    return <div style={{width: '100%'}}>
+    return <div style={{display:'inline-block',margin:'auto',marginTop:'2rem',padding:'1rem',background:'rgba(0,0,0,0.5)'}}>
         <h1 style={{textAlign: 'center', marginBottom: '5rem'}}>{studentName}</h1>
         <div style={{textAlign: 'center'}}>
-            <button className={styles.button} onClick={() => setSessionRunning(true)}>Click Here To Start</button>
+            <button className={styles.button} onClick={() => setSessionRunning(true)}>Click Here To Begin Session</button>
         </div>
     </div>;
 }
@@ -62,14 +60,20 @@ function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnsw
         width: '100%', display: 'flex',
         flexDirection: 'column'
     }} action=""
-                 onSubmit={(e) => handleSubmit({
-                     event: e,
-                     setTimerRunning,
-                     setCurrentQuestion,
-                     setCurrentSum,
-                     setAnswers,
-                     timeLogger
-                 })}>
+                 onSubmit={(e) => {
+                     e.preventDefault();
+                     const answer = parseInt(e.target.elements.answer.value);
+                     if(answer >= 0){
+                         handleSubmit({
+                             answer,
+                             setTimerRunning,
+                             setCurrentQuestion,
+                             setCurrentSum,
+                             setAnswers,
+                             timeLogger
+                         })
+                     }
+                 }}>
 
         <div style={{
             display: 'flex',
@@ -92,10 +96,10 @@ function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnsw
 function QuestionPanel({questionSets, currentSum, currentQuestion}) {
     return <div style={{
         fontSize: '18rem',
-        width: '21rem',
-        height: '21rem',
         position: 'relative',
-        margin: 'auto'
+        margin: 'auto',
+        maxWidth : '18rem',
+        height : '18rem',
     }}>
         <div style={{
             background: 'rgba(0,0,0,0.5)',
@@ -103,16 +107,16 @@ function QuestionPanel({questionSets, currentSum, currentQuestion}) {
             borderRadius: '20rem', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'
         }}/>
         <div style={{
-            position: 'absolute',
-            top: '-2rem',
+            position : 'relative',
+            top: '-4rem',
             width: '100%',
             textAlign: 'center'
         }}>{questionSets[currentSum][currentQuestion]}</div>
     </div>;
 }
 
-export default function ExerciseScreen({isTrial}) {
-    const {config} = useAppContext();
+export function ExerciseSession({isTrial}) {
+    const {config,saveSession,setPage} = useAppContext();
     const {studentName, totalSums, totalQuestions, pauseBetweenQuestionInMs} = config;
     const [questionSets] = useState(setupQuestions(totalQuestions, totalSums));
     const [timerRunning, setTimerRunning] = useState(false);
@@ -161,16 +165,18 @@ export default function ExerciseScreen({isTrial}) {
             setTimerRunning(false);
             setCurrentQuestion(-1);
             setCurrentSum(0);
-            // ok this is the end of the exercise screen lets go to summary page
-
-            console.log(questionSets, answers);
+            if(!isTrial){
+                saveSession(questionSets,answers);
+                setPage(2);
+            }
+            setAnswers([]);
         }
-    }, [currentSum, totalSums, answers, questionSets]);
+    }, [currentSum, totalSums, answers, questionSets,saveSession,setPage]);
     const isLastQuestionInTheSum = currentQuestion === totalQuestions;
     const currentTotalQuestions = (currentSum * totalQuestions) + (currentQuestion === -1 ? 0 : currentQuestion);
     const grandTotalQuestions = totalSums * totalQuestions;
     const percentage = Math.round((currentTotalQuestions / grandTotalQuestions) * 100);
-    return (<div style={{maxWidth: '100%'}}>
+    return (<div style={{maxWidth: '100%',display:'flex',flexDirection:'column'}}>
         <div style={{display: 'flex'}}>
             <div style={{flexGrow: '1'}}></div>
             <ReactMinimalPieChart
@@ -219,4 +225,8 @@ export default function ExerciseScreen({isTrial}) {
             </div>
         )}
     </div>)
+}
+
+export default function ExerciseScreen() {
+    return <div style={{padding: '2rem', width: '100%'}}><ExerciseSession isTrial={false}/></div>;
 }

@@ -11,6 +11,31 @@ export function AppContextProvider({children}){
         });
     const [page, setPage] = useState(0);
 
+    function getSession(){
+        let sessions = localStorage.getItem('sessions');
+        if(sessions && sessions.length > 0){
+            sessions = JSON.parse(sessions);
+        }else{
+            sessions = [];
+        }
+        return sessions;
+    }
+
+    function saveSession(questions,answers){
+        const sums = answers.map((answer,index) => {
+            return {
+                ...answer,
+                questions : questions[index]
+            };
+        });
+        const session = {date : new Date(),sums };
+        let sessions = getSession();
+        sessions.push(session);
+        localStorage.setItem('sessions',JSON.stringify(sessions));
+    }
+
+
+
     useEffect(() => {
         const config = localStorage.getItem('config');
         if (config && config.length > 0) {
@@ -26,7 +51,7 @@ export function AppContextProvider({children}){
         setPage(1);
     }
 
-    return <AppContext.Provider value={{ setPage,setConfig,config,saveSettings}}>
+    return <AppContext.Provider value={{ setPage,setConfig,config,saveSettings,saveSession,getSession}}>
         {children(page)}
     </AppContext.Provider>
 }
