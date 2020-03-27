@@ -32,13 +32,14 @@ function setupQuestions(totalQuestions, totalSums) {
     return result;
 }
 
-function handleSubmit({event,setTimerRunning,setCurrentSum,setCurrentQuestion,setAnswers}) {
+function handleSubmit({event, setTimerRunning, setCurrentSum, setCurrentQuestion, setAnswers, timeLogger}) {
     event.preventDefault();
     setTimerRunning(false);
     setCurrentSum(val => val + 1);
     setCurrentQuestion(-1);
+    const time = new Date().getTime() - timeLogger.current;
     const answer = parseInt(event.target.elements.answer.value);
-    setAnswers((val)=>[...val,answer]);
+    setAnswers((val) => [...val, {answer, time}]);
 }
 
 function ClickToStart({studentName, setSessionRunning}) {
@@ -50,25 +51,41 @@ function ClickToStart({studentName, setSessionRunning}) {
     </div>;
 }
 
-function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnswers, answerRef, isTrial}) {
-    return <form style={{width: '100%', display: 'flex', flexDirection: 'column'}} action=""
+function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnswers, isTrial}) {
+    const answerRef = useRef(null);
+    const timeLogger = useRef(null);
+    useEffect(() => {
+        timeLogger.current = new Date().getTime();
+        answerRef.current.focus();
+    }, []);
+    return <form style={{
+        width: '100%', display: 'flex',
+        flexDirection: 'column'
+    }} action=""
                  onSubmit={(e) => handleSubmit({
                      event: e,
                      setTimerRunning,
                      setCurrentQuestion,
                      setCurrentSum,
-                     setAnswers
+                     setAnswers,
+                     timeLogger
                  })}>
-        <div style={{textAlign: 'left', fontSize: '2rem', marginBottom: '2rem'}}>Answer :</div>
+
+        <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginTop: '1rem',
+            marginBottom: '1rem'
+        }}>
+            <div style={{textAlign: 'left', fontSize: '2rem'}}>Answer :</div>
+            <div style={{flexGrow: '1'}}></div>
+            {!isTrial &&
+            <button className={styles.button} type={'submit'}>Enter</button>
+            }
+        </div>
         <input ref={answerRef} className={styles.input} style={{marginBottom: '2rem', fontSize: '8rem'}}
                name={"answer"}/>
-        {!isTrial &&
-        <div style={{
-            textAlign: 'right',
-        }}>
-            <button className={styles.buttonNavigator} type={'submit'}>Enter</button>
-        </div>
-        }
+
     </form>;
 }
 
@@ -82,8 +99,9 @@ function QuestionPanel({questionSets, currentSum, currentQuestion}) {
     }}>
         <div style={{
             background: 'rgba(0,0,0,0.5)',
-            boxShadow: '0px 0px 80px 10px rgba(0,0,0,0.7)',
-            borderRadius: '20rem',position:'absolute',top:0,left:0,width:'100%',height:'100%'}}/>
+            boxShadow: '0px 0px 80px 10px rgba(0,0,0,1)',
+            borderRadius: '20rem', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'
+        }}/>
         <div style={{
             position: 'absolute',
             top: '-2rem',
@@ -102,7 +120,8 @@ export default function ExerciseScreen({isTrial}) {
     const [currentSum, setCurrentSum] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(-1);
     const {playSound} = useSound();
-    const [answers,setAnswers] = useState([]);
+    const [answers, setAnswers] = useState([]);
+
     useEffect(() => {
         let intervalId = null;
         if (sessionRunning) {
@@ -115,8 +134,7 @@ export default function ExerciseScreen({isTrial}) {
                         return val;
                     });
                 }, pauseBetweenQuestionInMs);
-            }
-            else {
+            } else {
                 setTimerRunning(true);
             }
         }
@@ -127,40 +145,36 @@ export default function ExerciseScreen({isTrial}) {
         }
     }, [timerRunning, sessionRunning, pauseBetweenQuestionInMs, totalQuestions]);
 
-    const answerRef = useRef(null);
-    useEffect(() => {
-        if(currentQuestion === totalQuestions && answerRef.current){
-            answerRef.current.focus();
-        }
 
-    },[currentQuestion,totalQuestions]);
     useEffect(() => {
-        if(sessionRunning && timerRunning){
+        if (sessionRunning && timerRunning) {
             const number = questionSets[currentSum][currentQuestion];
-            if(number !== undefined){
+            if (number !== undefined) {
                 playSound(number.toString());
             }
         }
-    },[timerRunning,sessionRunning,currentQuestion,currentSum,questionSets,playSound]);
+    }, [timerRunning, sessionRunning, currentQuestion, currentSum, questionSets, playSound]);
 
     useEffect(() => {
-        if(currentSum === totalSums){
+        if (currentSum === totalSums) {
             setSessionRunning(false);
             setTimerRunning(false);
             setCurrentQuestion(-1);
             setCurrentSum(0);
+            // ok this is the end of the exercise screen lets go to summary page
+
+            console.log(questionSets, answers);
         }
-    },[currentSum,totalSums]);
+    }, [currentSum, totalSums, answers, questionSets]);
     const isLastQuestionInTheSum = currentQuestion === totalQuestions;
     const currentTotalQuestions = (currentSum * totalQuestions) + (currentQuestion === -1 ? 0 : currentQuestion);
     const grandTotalQuestions = totalSums * totalQuestions;
     const percentage = Math.round((currentTotalQuestions / grandTotalQuestions) * 100);
-    console.log(percentage);
-    return (<div style={{maxWidth:'100%'}}>
-        <div style={{display:'flex'}}>
-            <div style={{flexGrow:'1'}}></div>
+    return (<div style={{maxWidth: '100%'}}>
+        <div style={{display: 'flex'}}>
+            <div style={{flexGrow: '1'}}></div>
             <ReactMinimalPieChart
-                style={{width:100,marginRight:'-1.5rem',marginTop:'-1.5rem'}}
+                style={{width: 100, marginRight: '-1.5rem', marginTop: '-1.5rem'}}
                 animate={true}
                 animationDuration={500}
                 animationEasing="ease-out"
@@ -169,7 +183,7 @@ export default function ExerciseScreen({isTrial}) {
                 data={[
                     {
                         color: 'rgba(255,255,255,0.9)',
-                        value:  percentage
+                        value: percentage
                     },
                     {
                         color: 'rgba(255,255,255,0.5)',
@@ -189,15 +203,17 @@ export default function ExerciseScreen({isTrial}) {
                 startAngle={-90}
             />
         </div>
-        {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning} />}
+        {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning}/>}
         {sessionRunning && currentSum < totalSums && (
             <div style={{textAlign: 'center'}}>
                 {timerRunning && <div>
-                    {currentQuestion === -1 && <h1 style={{fontSize:'4rem'}}>Ready !</h1>}
-                    {currentQuestion >= 0 && !isLastQuestionInTheSum && <QuestionPanel questionSets={questionSets} currentSum={currentSum} currentQuestion={currentQuestion} />}
+                    {currentQuestion === -1 && <h1 style={{fontSize: '4rem'}}>Ready !</h1>}
+                    {currentQuestion >= 0 && !isLastQuestionInTheSum &&
+                    <QuestionPanel questionSets={questionSets} currentSum={currentSum}
+                                   currentQuestion={currentQuestion}/>}
                     {isLastQuestionInTheSum &&
                     <AnswerForm setTimerRunning={setTimerRunning} setCurrentQuestion={setCurrentQuestion}
-                                setCurrentSum={setCurrentSum} setAnswers={setAnswers} answerRef={answerRef} isTrial={isTrial} />
+                                setCurrentSum={setCurrentSum} setAnswers={setAnswers} isTrial={isTrial}/>
                     }
                 </div>}
             </div>
