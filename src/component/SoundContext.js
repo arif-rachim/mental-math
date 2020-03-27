@@ -28,28 +28,7 @@ export function SoundContextProvider({children}) {
     const soundRef = useRef();
     const {config} = useAppContext();
 
-    function playSound(number,delayInMiliseconds){
-        return new Promise((resolve) => {
-            const startingTime = numberTimeline[number.toString()];
-            soundRef.current.currentTime = startingTime;
-            soundRef.current.play();
-            soundRef.current.ontimeupdate = () => {
-                const delayMoreThanASecond = delayInMiliseconds > 1000;
-                const hasReachEnd = soundRef.current.currentTime > 17.4;
-                const hasPlayedMoreThan900ms = soundRef.current.currentTime > (startingTime + 0.9);
-                if(hasReachEnd || hasPlayedMoreThan900ms){
-                    soundRef.current.pause();
-                    soundRef.current.ontimeupdate = null;
-                    if(delayMoreThanASecond){
-                        const delay = (soundRef.current.currentTime - startingTime) * 1000;
-                        setTimeout(resolve,delayInMiliseconds - delay,true);
-                    }else{
-                        resolve(true);
-                    }
-                }
-            };
-        });
-    }
+
     function playSounds(numbers) {
         const delayInMiliseconds = config.pauseBetweenQuestionInMs;
         if (numbers === null || numbers === undefined || numbers.length === 0) {
@@ -59,7 +38,6 @@ export function SoundContextProvider({children}) {
         numbers.forEach((number,index) => {
             setTimeout(() => {
                 const startingTime = numberTimeline[number.toString()];
-                soundRef.current.pause();
                 soundRef.current.currentTime = startingTime;
                 soundRef.current.play();
                 setTimeout(() => {
@@ -75,10 +53,6 @@ export function SoundContextProvider({children}) {
         soundRef.current.pause();
     },[]);
 
-    const [isIos] = useState(() => {
-        const userAgent = window.navigator.userAgent;
-        return userAgent.match(/iPad/i) || userAgent.match(/iPhone/i);
-    });
 
     return <SoundContext.Provider value={{playSounds}}>
         <div style={{
@@ -89,9 +63,8 @@ export function SoundContextProvider({children}) {
             textAlign: 'center',
             paddingTop: '1rem',
         }}>
-            {isIos && 'IOS'}
-            <audio ref={soundRef} controls preload="auto" >
-                <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v4.mp3`} type="audio/mpeg"/>
+            <audio ref={soundRef} preload="auto" >
+                <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v5.mp3`} type="audio/mpeg"/>
             </audio>
         </div>
         {children}
