@@ -30,7 +30,6 @@ export function SoundContextProvider({children}) {
         const delayInMiliseconds = 1000;
         numbers.forEach((number, index) => {
             setTimeout(() => {
-                soundRef.current.pause();
                 soundRef.current.currentTime = numberTimeline[number.toString()];
                 soundRef.current.play();
             }, (index + 1) * delayInMiliseconds);
