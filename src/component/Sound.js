@@ -42,7 +42,7 @@ export default function Sound({soundRef}){
     };
 
     return <div style={{width:1,height:1,overflow:'hidden'}}>
-        <audio ref={ONE} controls preload="auto" >
+        <audio ref={ONE} id={'audio-one'} controls preload="auto" >
             <source src={`${process.env.PUBLIC_URL}/audio/plus-1.mp3`} type="audio/mpeg"/>
         </audio>
         <audio ref={TWO} controls preload="auto">

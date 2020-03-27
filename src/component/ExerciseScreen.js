@@ -45,9 +45,6 @@ function ClickToStart({studentName, setSessionRunning,numbers}) {
     return <div style={{display:'inline-block',margin:'auto',marginTop:'2rem',padding:'1rem',background:'rgba(0,0,0,0.5)'}}>
         <h1 style={{textAlign: 'center', marginBottom: '5rem'}}>{studentName}</h1>
         <div style={{textAlign: 'center'}}>
-            <button onClick={() => {
-                playSounds(numbers);
-            }}>Test Sound 2</button><br/>
             <button className={styles.button} onClick={() => {
                 markSessionBegin();
                 setSessionRunning(true);
@@ -193,7 +190,7 @@ export function ExerciseSession({isTrial}) {
                 </Pie>
             </PieChart>
         </div>
-        <button onClick={() => playSounds([3,5,2,3,5])}>Play Sounds v1</button><br/>
+        <button onClick={() => document.getElementById('audio-one').play() }>Play Sounds v2</button><br/>
         {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning} numbers={questionSets[0]}/>}
         {sessionRunning && currentSum < totalSums && (
             <div style={{textAlign: 'center'}}>
