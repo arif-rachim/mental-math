@@ -27,26 +27,53 @@ const numberTimeline = {
 export function SoundContextProvider({children}) {
     const soundRef = useRef();
     const {config} = useAppContext();
+
+    function playSound(number,delayInMiliseconds){
+        return new Promise((resolve) => {
+            const startingTime = numberTimeline[number.toString()];
+            soundRef.current.currentTime = startingTime;
+            soundRef.current.play();
+            soundRef.current.ontimeupdate = () => {
+                const delayMoreThanASecond = delayInMiliseconds > 1000;
+                const hasReachEnd = soundRef.current.currentTime > 17.4;
+                const hasPlayedMoreThan900ms = soundRef.current.currentTime > (startingTime + 0.9);
+                if(hasReachEnd || hasPlayedMoreThan900ms){
+                    soundRef.current.pause();
+                    soundRef.current.ontimeupdate = null;
+                    if(delayMoreThanASecond){
+                        const delay = (soundRef.current.currentTime - startingTime) * 1000;
+                        setTimeout(resolve,delayInMiliseconds - delay,true);
+                    }else{
+                        resolve(true);
+                    }
+                }
+            };
+        });
+    }
     function playSounds(numbers) {
         const delayInMiliseconds = config.pauseBetweenQuestionInMs;
-        if(numbers === null || numbers === undefined || numbers.length === 0){
+        if (numbers === null || numbers === undefined || numbers.length === 0) {
             return;
         }
-        numbers.forEach((number, index) => {
-            setTimeout(() => {
-                soundRef.current.currentTime = numberTimeline[number.toString()];
-                soundRef.current.play();
-                setTimeout(() => {
-                    soundRef.current.pause();
-                },800);
-            }, (index + 1) * delayInMiliseconds);
-        });
 
+        (async() => {
+            for (let i = 0; i < numbers.length; i++) {
+                const number = numbers[i];
+                await playSound(number,delayInMiliseconds);
+            }
+        })();
     }
-    const iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
     return <SoundContext.Provider value={{playSounds}}>
-        <div style={{display: 'flex', justifyContent: 'center',width:'100%',position:'absolute',textAlign:'center',paddingTop:'1rem'}}>
-            <audio ref={soundRef} controls preload="auto">
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+            position: 'absolute',
+            textAlign: 'center',
+            paddingTop: '1rem'
+        }}>
+            <audio ref={soundRef} controls preload="auto" >
                 <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v2.mp3`} type="audio/mpeg"/>
             </audio>
         </div>
