@@ -8,7 +8,6 @@ export function SoundContextProvider({children}){
     const soundRef = useRef(null);
     const {config} = useAppContext();
 
-    // testing for IOS
     function playSounds(numbers){
         numbers.forEach((number,index) => {
             setTimeout(() => {

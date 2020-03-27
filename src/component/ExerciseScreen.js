@@ -45,6 +45,9 @@ function ClickToStart({studentName, setSessionRunning,numbers}) {
     return <div style={{display:'inline-block',margin:'auto',marginTop:'2rem',padding:'1rem',background:'rgba(0,0,0,0.5)'}}>
         <h1 style={{textAlign: 'center', marginBottom: '5rem'}}>{studentName}</h1>
         <div style={{textAlign: 'center'}}>
+            <button onClick={() => {
+                playSounds(numbers);
+            }}>Test Sound</button>
             <button className={styles.button} onClick={() => {
                 markSessionBegin();
                 setSessionRunning(true);
