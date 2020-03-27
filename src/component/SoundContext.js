@@ -88,8 +88,8 @@ export function SoundContextProvider({children}) {
             position: 'absolute',
             textAlign: 'center',
             paddingTop: '1rem',
-            opacity : isIos ? 1 : 0
         }}>
+            {isIos && 'IOS'}
             <audio ref={soundRef} controls preload="auto" >
                 <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v4.mp3`} type="audio/mpeg"/>
             </audio>
