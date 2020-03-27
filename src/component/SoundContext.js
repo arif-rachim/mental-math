@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useRef} from "react";
+import React, {createContext, useContext, useEffect, useRef, useState} from "react";
 import {useAppContext} from "../AppContext";
 
 const SoundContext = createContext(null);
@@ -74,6 +74,12 @@ export function SoundContextProvider({children}) {
         soundRef.current.load();
         soundRef.current.pause();
     },[]);
+
+    const [isIos] = useState(() => {
+        const userAgent = window.navigator.userAgent;
+        return userAgent.match(/iPad/i) || userAgent.match(/iPhone/i);
+    });
+
     return <SoundContext.Provider value={{playSounds}}>
         <div style={{
             display: 'flex',
@@ -81,10 +87,11 @@ export function SoundContextProvider({children}) {
             width: '100%',
             position: 'absolute',
             textAlign: 'center',
-            paddingTop: '1rem'
+            paddingTop: '1rem',
+            opacity : isIos ? 1 : 0
         }}>
             <audio ref={soundRef} controls preload="auto" >
-                <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v3.mp3`} type="audio/mpeg"/>
+                <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v4.mp3`} type="audio/mpeg"/>
             </audio>
         </div>
         {children}
