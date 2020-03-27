@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import styles from "../App.module.css";
 import {useSound} from "./SoundContext";
 import {useAppContext} from "../AppContext";
-import ReactMinimalPieChart from "react-minimal-pie-chart";
+import {Cell, Pie, PieChart} from "recharts";
 
 
 function generateRandomNumber(result) {
@@ -41,10 +41,14 @@ function handleSubmit({answer, setTimerRunning, setCurrentSum, setCurrentQuestio
 }
 
 function ClickToStart({studentName, setSessionRunning}) {
+    const {markSessionBegin} = useAppContext();
     return <div style={{display:'inline-block',margin:'auto',marginTop:'2rem',padding:'1rem',background:'rgba(0,0,0,0.5)'}}>
         <h1 style={{textAlign: 'center', marginBottom: '5rem'}}>{studentName}</h1>
         <div style={{textAlign: 'center'}}>
-            <button className={styles.button} onClick={() => setSessionRunning(true)}>Click Here To Begin Session</button>
+            <button className={styles.button} onClick={() => {
+                markSessionBegin()
+                setSessionRunning(true);
+            }}>Click Here To Begin Session</button>
         </div>
     </div>;
 }
@@ -115,6 +119,8 @@ function QuestionPanel({questionSets, currentSum, currentQuestion}) {
     </div>;
 }
 
+const colors = ['rgba(255,255,255,1)','rgba(255,255,255,0.5)'];
+
 export function ExerciseSession({isTrial}) {
     const {config,saveSession,setPage} = useAppContext();
     const {studentName, totalSums, totalQuestions, pauseBetweenQuestionInMs} = config;
@@ -171,43 +177,27 @@ export function ExerciseSession({isTrial}) {
             }
             setAnswers([]);
         }
-    }, [currentSum, totalSums, answers, questionSets,saveSession,setPage]);
+    }, [currentSum, totalSums, answers, questionSets,saveSession,setPage,isTrial]);
     const isLastQuestionInTheSum = currentQuestion === totalQuestions;
     const currentTotalQuestions = (currentSum * totalQuestions) + (currentQuestion === -1 ? 0 : currentQuestion);
     const grandTotalQuestions = totalSums * totalQuestions;
     const percentage = Math.round((currentTotalQuestions / grandTotalQuestions) * 100);
+    const data = [
+        {name:'complete',value:percentage},
+        {name:'incomplete',value: 100 - percentage}
+    ];
     return (<div style={{maxWidth: '100%',display:'flex',flexDirection:'column'}}>
         <div style={{display: 'flex'}}>
             <div style={{flexGrow: '1'}}></div>
-            <ReactMinimalPieChart
-                style={{width: 100, marginRight: '-1.5rem', marginTop: '-1.5rem'}}
-                animate={true}
-                animationDuration={500}
-                animationEasing="ease-out"
-                cx={50}
-                cy={50}
-                data={[
+            <PieChart width={100} height={100}>
+                <Pie animationDuration={100} data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={30} outerRadius={40} fill="#82ca9d" >
                     {
-                        color: 'rgba(255,255,255,0.9)',
-                        value: percentage
-                    },
-                    {
-                        color: 'rgba(255,255,255,0.5)',
-                        value: 100 - percentage
+                        data.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={colors[index]} stroke={'none'}/>
+                        ))
                     }
-                ]}
-                label={false}
-                labelPosition={50}
-                lengthAngle={360}
-                lineWidth={30}
-                onClick={undefined}
-                onMouseOut={undefined}
-                onMouseOver={undefined}
-                paddingAngle={0}
-                radius={50}
-                rounded={false}
-                startAngle={-90}
-            />
+                </Pie>
+            </PieChart>
         </div>
         {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning}/>}
         {sessionRunning && currentSum < totalSums && (

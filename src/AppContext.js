@@ -1,6 +1,7 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {createContext, useContext, useEffect, useRef, useState} from 'react';
 
 const AppContext = createContext(null);
+
 
 export function AppContextProvider({children}){
     const [config, setConfig] = useState({
@@ -22,13 +23,14 @@ export function AppContextProvider({children}){
     }
 
     function saveSession(questions,answers){
+        const sessionDuration = markSessionEnd();
         const sums = answers.map((answer,index) => {
             return {
                 ...answer,
                 questions : questions[index]
             };
         });
-        const session = {date : new Date(),sums };
+        const session = {date : new Date(),sums,duration:sessionDuration };
         let sessions = getSession();
         sessions.push(session);
         localStorage.setItem('sessions',JSON.stringify(sessions));
@@ -51,7 +53,16 @@ export function AppContextProvider({children}){
         setPage(1);
     }
 
-    return <AppContext.Provider value={{ setPage,setConfig,config,saveSettings,saveSession,getSession}}>
+    const sessionTimer = useRef();
+    function markSessionBegin(){
+        sessionTimer.current = new Date().getTime();
+    }
+
+    function markSessionEnd(){
+        return new Date().getTime() - sessionTimer.current;
+    }
+
+    return <AppContext.Provider value={{ setPage,setConfig,config,saveSettings,saveSession,getSession,markSessionBegin}}>
         {children(page)}
     </AppContext.Provider>
 }
