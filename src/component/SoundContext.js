@@ -69,13 +69,6 @@ export function SoundContextProvider({children}) {
 
         });
 
-        //
-        // (async() => {
-        //     for (let i = 0; i < numbers.length; i++) {
-        //         const number = numbers[i];
-        //         await playSound(number,delayInMiliseconds);
-        //     }
-        // })();
     }
     useEffect(() => {
         soundRef.current.load();
@@ -91,7 +84,7 @@ export function SoundContextProvider({children}) {
             paddingTop: '1rem'
         }}>
             <audio ref={soundRef} controls preload="auto" >
-                <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v2.mp3`} type="audio/mpeg"/>
+                <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v3.mp3`} type="audio/mpeg"/>
             </audio>
         </div>
         {children}
