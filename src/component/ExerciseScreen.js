@@ -192,7 +192,7 @@ export function ExerciseSession({isTrial}) {
         </div>
         <button onClick={() => {
             playSounds([1,2,3,4,5,6,7,8,9,-1,-2,-3,-4,-5,-6,-7,-8,-9]);
-        }}>Play Sounds v6</button><br/>
+        }}>Play Sounds v7</button><br/>
         {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning} numbers={questionSets[0]}/>}
         {sessionRunning && currentSum < totalSums && (
             <div style={{textAlign: 'center'}}>

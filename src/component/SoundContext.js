@@ -41,7 +41,7 @@ export function SoundContextProvider({children}) {
     }
 
     return <SoundContext.Provider value={{playSounds}}>
-        <div style={{display: 'flex', justifyContent: 'flex-end',opacity:0,position:'absolute',top:0,right:0}}>
+        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
             <audio ref={soundRef} controls preload="auto">
                 <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v2.mp3`} type="audio/mpeg"/>
             </audio>
