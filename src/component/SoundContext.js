@@ -56,12 +56,26 @@ export function SoundContextProvider({children}) {
             return;
         }
 
-        (async() => {
-            for (let i = 0; i < numbers.length; i++) {
-                const number = numbers[i];
-                await playSound(number,delayInMiliseconds);
-            }
-        })();
+        numbers.forEach((number,index) => {
+            setTimeout(() => {
+                const startingTime = numberTimeline[number.toString()];
+                soundRef.current.pause();
+                soundRef.current.currentTime = startingTime;
+                soundRef.current.play();
+                setTimeout(() => {
+                    soundRef.current.pause();
+                },900);
+            },(index + 1) * delayInMiliseconds);
+
+        });
+
+        //
+        // (async() => {
+        //     for (let i = 0; i < numbers.length; i++) {
+        //         const number = numbers[i];
+        //         await playSound(number,delayInMiliseconds);
+        //     }
+        // })();
     }
     useEffect(() => {
         soundRef.current.load();
