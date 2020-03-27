@@ -50,16 +50,17 @@ function AppDrawer() {
 
 export default function App() {
 
-    return <SoundContextProvider>
-        <AppContextProvider>
+    return <AppContextProvider>
             {(page) => {
-                return (<div className={styles.main}>
+                return (<SoundContextProvider>
+                    <div className={styles.main}>
                     {page === 0 && <SetupScreen/>}
                     {page === 1 && <ExerciseScreen/>}
                     {page === 2 && <SummaryScreen/>}
                     {<AppDrawer />}
-                </div>)
+                </div>
+                </SoundContextProvider>)
             }}</AppContextProvider>
-    </SoundContextProvider>
+
 
 }

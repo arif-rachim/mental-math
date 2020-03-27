@@ -3,7 +3,6 @@ import styles from "../App.module.css";
 import {useSound} from "./SoundContext";
 import {useAppContext} from "../AppContext";
 import {Cell, Pie, PieChart} from "recharts";
-import Drawer from "@material-ui/core/Drawer";
 
 function generateRandomNumber(result) {
     const total = result.reduce((ac, next) => ac + next, 0);
@@ -40,22 +39,25 @@ function handleSubmit({answer, setTimerRunning, setCurrentSum, setCurrentQuestio
     setAnswers((val) => [...val, {answer, time}]);
 }
 
-function ClickToStart({studentName, setSessionRunning}) {
+function ClickToStart({studentName, setSessionRunning,numbers}) {
     const {markSessionBegin} = useAppContext();
+    const {playSounds} = useSound();
     return <div style={{display:'inline-block',margin:'auto',marginTop:'2rem',padding:'1rem',background:'rgba(0,0,0,0.5)'}}>
         <h1 style={{textAlign: 'center', marginBottom: '5rem'}}>{studentName}</h1>
         <div style={{textAlign: 'center'}}>
             <button className={styles.button} onClick={() => {
-                markSessionBegin()
+                markSessionBegin();
                 setSessionRunning(true);
+                playSounds(numbers);
             }}>Click Here To Begin Session</button>
         </div>
     </div>;
 }
 
-function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnswers, isTrial}) {
+function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnswers, isTrial,currentSum,questionSet}) {
     const answerRef = useRef(null);
     const timeLogger = useRef(null);
+    const {playSounds} = useSound();
     useEffect(() => {
         timeLogger.current = new Date().getTime();
         answerRef.current.focus();
@@ -75,7 +77,8 @@ function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnsw
                              setCurrentSum,
                              setAnswers,
                              timeLogger
-                         })
+                         });
+                         playSounds(questionSet[currentSum+1]);
                      }
                  }}>
 
@@ -128,7 +131,6 @@ export function ExerciseSession({isTrial}) {
     const [sessionRunning, setSessionRunning] = useState(false);
     const [currentSum, setCurrentSum] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(-1);
-    const {playSound,playSounds} = useSound();
     const [answers, setAnswers] = useState([]);
 
     useEffect(() => {
@@ -153,16 +155,6 @@ export function ExerciseSession({isTrial}) {
             }
         }
     }, [timerRunning, sessionRunning, pauseBetweenQuestionInMs, totalQuestions]);
-
-
-    useEffect(() => {
-        if (sessionRunning && timerRunning) {
-            const number = questionSets[currentSum][currentQuestion];
-            if (number !== undefined) {
-                playSound(number.toString());
-            }
-        }
-    }, [timerRunning, sessionRunning, currentQuestion, currentSum, questionSets, playSound]);
 
     useEffect(() => {
         if (currentSum === totalSums) {
@@ -198,8 +190,8 @@ export function ExerciseSession({isTrial}) {
                 </Pie>
             </PieChart>
         </div>
-        <button onClick={() => playSounds([3,5,2,3,5])}>Play Sounds</button>
-        {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning}/>}
+
+        {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning} numbers={questionSets[0]}/>}
         {sessionRunning && currentSum < totalSums && (
             <div style={{textAlign: 'center'}}>
                 {timerRunning && <div>
@@ -209,7 +201,9 @@ export function ExerciseSession({isTrial}) {
                                    currentQuestion={currentQuestion}/>}
                     {isLastQuestionInTheSum &&
                     <AnswerForm setTimerRunning={setTimerRunning} setCurrentQuestion={setCurrentQuestion}
-                                setCurrentSum={setCurrentSum} setAnswers={setAnswers} isTrial={isTrial}/>
+                                setCurrentSum={setCurrentSum} setAnswers={setAnswers} isTrial={isTrial}
+                                currentSum={currentSum} questionSet={questionSets}
+                    />
                     }
                 </div>}
             </div>

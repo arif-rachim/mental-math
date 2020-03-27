@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/mental-math/precache-manifest.8306cb370d3975e0b89f729f405d1911.js"
+  "/mental-math/precache-manifest.fb6cb49f7682063f22194a5bc58af5d6.js"
 );
 
 self.addEventListener('message', (event) => {
