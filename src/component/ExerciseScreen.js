@@ -47,7 +47,7 @@ function ClickToStart({studentName, setSessionRunning,numbers}) {
         <div style={{textAlign: 'center'}}>
             <button onClick={() => {
                 playSounds(numbers);
-            }}>Test Sound</button>
+            }}>Test Sound 2</button><br/>
             <button className={styles.button} onClick={() => {
                 markSessionBegin();
                 setSessionRunning(true);
@@ -135,7 +135,7 @@ export function ExerciseSession({isTrial}) {
     const [currentSum, setCurrentSum] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(-1);
     const [answers, setAnswers] = useState([]);
-
+    const {playSounds} = useSound();
     useEffect(() => {
         let intervalId = null;
         if (sessionRunning) {
@@ -193,7 +193,7 @@ export function ExerciseSession({isTrial}) {
                 </Pie>
             </PieChart>
         </div>
-
+        <button onClick={() => playSounds([3,5,2,3,5])}>Play Sounds</button><br/>
         {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning} numbers={questionSets[0]}/>}
         {sessionRunning && currentSum < totalSums && (
             <div style={{textAlign: 'center'}}>
