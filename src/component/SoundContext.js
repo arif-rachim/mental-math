@@ -1,18 +1,16 @@
 import React, {useContext, createContext,useRef} from "react";
 import Sound from "./Sound";
-import {useAppContext} from "../AppContext";
 
 const SoundContext = createContext(null);
 
 export function SoundContextProvider({children}){
     const soundRef = useRef(null);
-    const {config} = useAppContext();
 
     function playSounds(numbers){
         numbers.forEach((number,index) => {
             setTimeout(() => {
                 soundRef.current[number.toString()].current.play();
-            },(index + 1) * config.pauseBetweenQuestionInMs);
+            },(index + 1) * 1000);
         });
     }
     return <SoundContext.Provider value={{playSounds}}>

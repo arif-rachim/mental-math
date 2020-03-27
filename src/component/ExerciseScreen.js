@@ -193,7 +193,7 @@ export function ExerciseSession({isTrial}) {
                 </Pie>
             </PieChart>
         </div>
-        <button onClick={() => playSounds([3,5,2,3,5])}>Play Sounds</button><br/>
+        <button onClick={() => playSounds([3,5,2,3,5])}>Play Sounds v1</button><br/>
         {!sessionRunning && <ClickToStart studentName={studentName} setSessionRunning={setSessionRunning} numbers={questionSets[0]}/>}
         {sessionRunning && currentSum < totalSums && (
             <div style={{textAlign: 'center'}}>
