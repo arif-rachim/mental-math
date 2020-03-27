@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useRef} from "react";
+import React, {createContext, useContext, useEffect, useRef} from "react";
 import {useAppContext} from "../AppContext";
 
 const SoundContext = createContext(null);
@@ -63,7 +63,10 @@ export function SoundContextProvider({children}) {
             }
         })();
     }
-
+    useEffect(() => {
+        soundRef.current.load();
+        soundRef.current.pause();
+    },[]);
     return <SoundContext.Provider value={{playSounds}}>
         <div style={{
             display: 'flex',
