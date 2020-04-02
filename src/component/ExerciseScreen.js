@@ -109,6 +109,14 @@ function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnsw
 }
 
 function QuestionPanel({questionSets, currentSum, currentQuestion}) {
+    let question = 0;
+    try{
+        question = questionSets[currentSum][currentQuestion];
+    }catch(error){
+        debugger;
+        console.error(error);
+    }
+
     return <div style={{
         fontSize: '18rem',
         position: 'relative',
@@ -121,12 +129,13 @@ function QuestionPanel({questionSets, currentSum, currentQuestion}) {
             boxShadow: '0px 0px 80px 10px rgba(0,0,0,1)',
             borderRadius: '20rem', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'
         }}/>
+
         <div style={{
             position: 'relative',
             top: '-4rem',
             width: '100%',
             textAlign: 'center'
-        }}>{questionSets[currentSum][currentQuestion]}</div>
+        }}>{question}</div>
     </div>;
 }
 
@@ -262,7 +271,7 @@ export function ExerciseWeaknessScreen() {
     const {getWeakness,config} = useAppContext();
     const [weakness] = useState(getWeakness());
     let questions = weakness.map(w => w.questions);
-    questions = questions.slice(0,config.totalQuestions);
+    questions = questions.slice(0,config.totalSums);
     return <div style={{padding: '2rem', width: '100%'}}>
         <ExerciseSession isTrial={false} questions={questions}/>
     </div>;
