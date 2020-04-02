@@ -113,7 +113,6 @@ function QuestionPanel({questionSets, currentSum, currentQuestion}) {
     try{
         question = questionSets[currentSum][currentQuestion];
     }catch(error){
-        debugger;
         console.error(error);
     }
 
