@@ -9,6 +9,8 @@ export default function SetupScreen() {
     const {studentName, totalSums, totalQuestions, pauseBetweenQuestionInMs} = config;
     const [currentConfigScreen, setCurrentConfigScreen] = useState(0);
     const {setConfig, saveSettings} = useAppContext();
+
+
     return (<div style={{width:'100%'}}>
         <div style={{
             display: 'flex',

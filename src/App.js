@@ -1,6 +1,6 @@
 import React, {useRef, useState} from "react";
 import styles from './App.module.css';
-import ExerciseScreen from "./component/ExerciseScreen";
+import ExerciseScreen, {ExerciseWeaknessScreen} from "./component/ExerciseScreen";
 import SetupScreen from "./component/SetupScreen";
 import {SoundContextProvider} from "./component/SoundContext";
 import {AppContextProvider, useAppContext} from "./AppContext";
@@ -8,6 +8,7 @@ import SummaryScreen from "./component/SummaryScreen";
 import Drawer from "@material-ui/core/Drawer";
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from "@material-ui/core/IconButton";
+import WeaknessScreen from "./component/WeaknessScreen";
 
 function AppDrawer() {
     const [displayAnchor,setDisplayAnchor] = useState(false);
@@ -34,8 +35,12 @@ function AppDrawer() {
                 </div>
                 <div className={styles.button} style={{marginTop: '2rem'}} onClick={() => {
                     setPage(2);
-                    setDisplayAnchor(false)
+                    setDisplayAnchor(false);
                 }}>View Report</div>
+                <div className={styles.button} style={{marginTop: '2rem'}} onClick={() => {
+                    setPage(3);
+                    setDisplayAnchor(false);
+                }}>Weakness</div>
             </div>
         </Drawer>
         {hasConfig.current &&
@@ -57,7 +62,9 @@ export default function App() {
                     {page === 0 && <SetupScreen/>}
                     {page === 1 && <ExerciseScreen/>}
                     {page === 2 && <SummaryScreen/>}
-                    {<AppDrawer />}
+                    {page === 3 && <WeaknessScreen/>}
+                    {page === 31 && <ExerciseWeaknessScreen/>}
+                    <AppDrawer />
                 </div></SoundContextProvider>)
             }}</AppContextProvider>
 

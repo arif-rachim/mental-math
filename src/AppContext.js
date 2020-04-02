@@ -67,10 +67,52 @@ export function AppContextProvider({children}){
     }
 
     function markSessionEnd(){
-        return new Date().getTime() - sessionTimer.current;
+        const time = new Date().getTime() - sessionTimer.current
+        sessionTimer.current = null;
+        return time;
     }
 
-    return <AppContext.Provider value={{ setPage,setConfig,config,saveSettings,saveSession,getSession,markSessionBegin,sessionTimer}}>
+    function getAllWrongAnswers(limit){
+        const sessions = getSession();
+        let wrongSums = sessions.reduce((accumulator,session) => {
+            let wrongAnswers = session.sums.filter(sum => {
+                return sum.answer !== sum.questions.reduce((acc,next) => acc+next,0);
+            });
+            wrongAnswers = wrongAnswers.map(wa => {
+                return {...wa,date:session.date}
+            });
+            return [...accumulator,...wrongAnswers]
+        },[]);
+        let startIndex = wrongSums.length - limit;
+        startIndex = startIndex < 0 ? 0 : startIndex;
+        const result = wrongSums.splice(startIndex,wrongSums.length);
+        return result;
+    }
+
+    function getWeakness(){
+        let wrongAnswers = getAllWrongAnswers(1000);
+
+        const score = {};
+        wrongAnswers.forEach((wa) => {
+            const key = wa.questions.join(',');
+            score[key] = score[key] || {
+                count : 0,
+                questions : wa.questions,
+                answers : []
+            };
+            score[key].count += 1;
+            score[key].answers.push({answer:wa.answer,date:wa.date,time:wa.time});
+        });
+        const scores = Object.values(score);
+        scores.sort((a,b) => {
+            if (a.answers.length > b.answers.length) return -1;
+            if (b.answers.length > a.answers.length) return 1;
+            return 0;
+        });
+        return scores;
+    }
+
+    return <AppContext.Provider value={{ setPage,setConfig,config,saveSettings,saveSession,getSession,markSessionBegin,sessionTimer,getAllWrongAnswers,getWeakness}}>
         {children(page)}
     </AppContext.Provider>
 }

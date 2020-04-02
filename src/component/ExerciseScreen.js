@@ -56,7 +56,7 @@ function ClickToStart({studentName, setSessionRunning, numbers}) {
                 markSessionBegin();
                 setSessionRunning(true);
                 playSounds(numbers);
-            }}>Click Here To Begin Session
+            }}>Click To Begin Session
             </button>
         </div>
     </div>;
@@ -66,6 +66,7 @@ function AnswerForm({setTimerRunning, setCurrentQuestion, setCurrentSum, setAnsw
     const answerRef = useRef(null);
     const timeLogger = useRef(null);
     const {playSounds} = useSound();
+
     useEffect(() => {
         timeLogger.current = new Date().getTime();
         answerRef.current.focus();
@@ -135,10 +136,16 @@ function padZero(val) {
     return parseInt(val.toString()) <= 9 ? '0' + val : val;
 }
 
-export function ExerciseSession({isTrial}) {
+export function ExerciseSession({isTrial,questions}) {
     const {config, saveSession, setPage, sessionTimer} = useAppContext();
     const {studentName, totalSums, totalQuestions, pauseBetweenQuestionInMs} = config;
-    const [questionSets] = useState(setupQuestions(totalQuestions, totalSums));
+    const [questionSets] = useState(() => {
+        if(questions){
+            return questions;
+        }
+        return setupQuestions(totalQuestions, totalSums);
+    });
+
     const [timerRunning, setTimerRunning] = useState(false);
     const [sessionRunning, setSessionRunning] = useState(false);
     const [currentSum, setCurrentSum] = useState(0);
@@ -248,5 +255,15 @@ export function ExerciseSession({isTrial}) {
 export default function ExerciseScreen() {
     return <div style={{padding: '2rem', width: '100%'}}>
         <ExerciseSession isTrial={false}/>
+    </div>;
+}
+
+export function ExerciseWeaknessScreen() {
+    const {getWeakness,config} = useAppContext();
+    const [weakness] = useState(getWeakness());
+    let questions = weakness.map(w => w.questions);
+    questions = questions.slice(0,config.totalQuestions);
+    return <div style={{padding: '2rem', width: '100%'}}>
+        <ExerciseSession isTrial={false} questions={questions}/>
     </div>;
 }

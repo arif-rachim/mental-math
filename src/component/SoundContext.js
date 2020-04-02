@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useRef, useState} from "react";
+import React, {createContext, useContext, useEffect, useRef} from "react";
 import {useAppContext} from "../AppContext";
 
 const SoundContext = createContext(null);
