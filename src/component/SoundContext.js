@@ -25,8 +25,12 @@ const numberTimeline = {
 };
 
 export function SoundContextProvider({children}) {
-    const soundRef = useRef();
+
     const {config} = useAppContext();
+    const range = [];
+    for (let i = 0; i < 99; i++) {
+        range.push(i);
+    }
 
 
     function playSounds(numbers) {
@@ -37,22 +41,27 @@ export function SoundContextProvider({children}) {
 
         numbers.forEach((number,index) => {
             setTimeout(() => {
-                const startingTime = numberTimeline[number.toString()];
-                soundRef.current.currentTime = startingTime;
-                soundRef.current.play();
-                setTimeout(() => {
-                    soundRef.current.pause();
-                },900);
-            },(index + 1) * delayInMiliseconds);
+                try{
+                    if(number<0){
+                        document.getElementById('audio-minus').play();
+                        setTimeout(() => {
+                            const audioNode = document.getElementById(`audio-${Math.abs(number)}`);
+                            audioNode.play();
+                        },300)
+                    }else{
+                        const audioNode = document.getElementById(`audio-${number}`);
+                        audioNode.play();
+                    }
 
+                }catch(err){
+                    console.error(err);
+                    console.log('Unable to play ',number);
+                }
+
+            },(index + 1) * delayInMiliseconds);
         });
 
     }
-    useEffect(() => {
-        soundRef.current.load();
-        soundRef.current.pause();
-    },[]);
-
 
     return <SoundContext.Provider value={{playSounds}}>
         <div style={{
@@ -63,8 +72,13 @@ export function SoundContextProvider({children}) {
             textAlign: 'center',
             paddingTop: '1rem',
         }}>
-            <audio ref={soundRef} preload="auto" >
-                <source src={`${process.env.PUBLIC_URL}/audio/mental-math-v5.mp3`} type="audio/mpeg"/>
+            {range.map(i => {
+                return <audio key={i} id={`audio-${i+1}`} preload="auto" >
+                    <source src={`${process.env.PUBLIC_URL}/audio/${i+1}.wav`} type="audio/wav"/>
+                </audio>
+            })}
+            <audio id={'audio-minus'} preload="auto" >
+                <source src={`${process.env.PUBLIC_URL}/audio/minus.mp3`} type="audio/mp3"/>
             </audio>
         </div>
         {children}

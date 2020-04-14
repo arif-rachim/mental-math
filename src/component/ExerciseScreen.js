@@ -8,7 +8,7 @@ import moment from 'moment';
 function generateRandomNumber(result) {
     const total = result.reduce((ac, next) => ac + next, 0);
     const shouldBeNegative = Math.random() <= 0.3; // 30 percent chance;
-    const nextCandidate = (Math.floor(Math.random() * 9) + 1) * (shouldBeNegative ? -1 : 1);
+    const nextCandidate = (Math.floor(Math.random() * 99) + 1) * (shouldBeNegative ? -1 : 1);
     if ((total + nextCandidate) > 0 && Math.abs(result[result.length - 1]) !== Math.abs(nextCandidate)) {
         return nextCandidate;
     } else {

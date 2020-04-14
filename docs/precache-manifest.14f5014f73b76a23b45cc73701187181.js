@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a5491e3ec6c510db29c915d00f1a2e00",
+    "revision": "12f55b2612d3b91010bab3731572a1f3",
     "url": "/mental-math/index.html"
   },
   {
-    "revision": "61d4f73693bd2ee7abd6",
+    "revision": "3a47c50812865c0e9d99",
     "url": "/mental-math/static/css/main.83a228f5.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/mental-math/static/js/2.881b50be.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "61d4f73693bd2ee7abd6",
-    "url": "/mental-math/static/js/main.8d002eb3.chunk.js"
+    "revision": "3a47c50812865c0e9d99",
+    "url": "/mental-math/static/js/main.4caacd4f.chunk.js"
   },
   {
     "revision": "ac3a11a4eb0108d79aac",
