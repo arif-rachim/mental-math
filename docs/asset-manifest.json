@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/mental-math/static/css/main.83a228f5.chunk.css",
-    "main.js": "/mental-math/static/js/main.4caacd4f.chunk.js",
-    "main.js.map": "/mental-math/static/js/main.4caacd4f.chunk.js.map",
+    "main.js": "/mental-math/static/js/main.a09d5506.chunk.js",
+    "main.js.map": "/mental-math/static/js/main.a09d5506.chunk.js.map",
     "runtime-main.js": "/mental-math/static/js/runtime-main.be99d159.js",
     "runtime-main.js.map": "/mental-math/static/js/runtime-main.be99d159.js.map",
     "static/js/2.881b50be.chunk.js": "/mental-math/static/js/2.881b50be.chunk.js",
     "static/js/2.881b50be.chunk.js.map": "/mental-math/static/js/2.881b50be.chunk.js.map",
     "index.html": "/mental-math/index.html",
-    "precache-manifest.14f5014f73b76a23b45cc73701187181.js": "/mental-math/precache-manifest.14f5014f73b76a23b45cc73701187181.js",
+    "precache-manifest.035f032e0078c5da9a5ca4b76ba94ef2.js": "/mental-math/precache-manifest.035f032e0078c5da9a5ca4b76ba94ef2.js",
     "service-worker.js": "/mental-math/service-worker.js",
     "static/css/main.83a228f5.chunk.css.map": "/mental-math/static/css/main.83a228f5.chunk.css.map",
     "static/js/2.881b50be.chunk.js.LICENSE.txt": "/mental-math/static/js/2.881b50be.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.be99d159.js",
     "static/js/2.881b50be.chunk.js",
     "static/css/main.83a228f5.chunk.css",
-    "static/js/main.4caacd4f.chunk.js"
+    "static/js/main.a09d5506.chunk.js"
   ]
 }

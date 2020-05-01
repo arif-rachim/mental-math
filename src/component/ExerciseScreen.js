@@ -5,11 +5,14 @@ import {useAppContext} from "../AppContext";
 import {Cell, Pie, PieChart} from "recharts";
 import moment from 'moment';
 
+const NUMBER_TO_AVOID = [10,20,30,40,50,60,70,80,90,11,22,33,44,55,66,77,88,99];
+
 function generateRandomNumber(result) {
     const total = result.reduce((ac, next) => ac + next, 0);
-    const shouldBeNegative = Math.random() <= 0.3; // 30 percent chance;
-    const nextCandidate = (Math.floor(Math.random() * 99) + 1) * (shouldBeNegative ? -1 : 1);
-    if ((total + nextCandidate) > 0 && Math.abs(result[result.length - 1]) !== Math.abs(nextCandidate)) {
+    const shouldBeNegative = Math.random() <= 0.3; // 40 percent chance;
+    const nextCandidate = (Math.floor(Math.random() * 89) + 10) * (shouldBeNegative ? -1 : 1);
+
+    if ( NUMBER_TO_AVOID.indexOf(Math.abs(nextCandidate)) < 0 && (total + nextCandidate) > 0 && Math.abs(result[result.length - 1]) !== Math.abs(nextCandidate)) {
         return nextCandidate;
     } else {
         return generateRandomNumber(result);
